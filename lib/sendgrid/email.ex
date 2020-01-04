@@ -158,9 +158,13 @@ defmodule SendGrid.Email do
     %Email{}
   end
 
+  def add_asm_group_id(%Email{} = email, nil), do: email
+
   def add_asm_group_id(%Email{} = email, group_id) when is_integer(group_id) do
     %{email | asm: %Sendgrid.Email.Asm{group_id: group_id}}
   end
+
+  def add_asm_groups_to_display(%Email{} = email, nil), do: email
 
   def add_asm_groups_to_display(%Email{} = email, groups_to_display)
       when is_list(groups_to_display) do
