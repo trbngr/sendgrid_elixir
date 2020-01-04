@@ -720,6 +720,7 @@ defmodule SendGrid.Email do
         template_id: email.template_id,
         attachments: email.attachments,
         headers: email.headers,
+        asm: email.asm,
         mail_settings: %{
           sandbox_mode: %{
             enable: Application.get_env(:sendgrid, :sandbox_enable, email.sandbox)
