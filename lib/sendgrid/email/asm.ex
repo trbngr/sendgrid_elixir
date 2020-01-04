@@ -1,4 +1,4 @@
-defmodule Sendgrid.Email.Asm do
+defmodule SendGrid.Email.Asm do
   defstruct group_id: nil, groups_to_display: nil
 
   defimpl Jason.Encoder do
