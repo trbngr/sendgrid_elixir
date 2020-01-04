@@ -123,7 +123,7 @@ defmodule SendGrid.Email do
           headers: nil | headers(),
           attachments: nil | [attachment],
           sandbox: boolean(),
-          asm: nil | %Sendgrid.Email.Asm{},
+          asm: nil | %SendGrid.Email.Asm{},
           __phoenix_view__: nil | atom,
           __phoenix_layout__:
             nil | %{optional(:text) => String.t(), optional(:html) => String.t()}
