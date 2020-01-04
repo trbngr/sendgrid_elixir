@@ -102,7 +102,7 @@ defmodule SendGrid.Email do
             attachments: nil,
             dynamic_template_data: nil,
             sandbox: false,
-            asm: nil,
+            asm: %SendGrid.Email.Asm{},
             __phoenix_view__: nil,
             __phoenix_layout__: nil
 
@@ -160,15 +160,15 @@ defmodule SendGrid.Email do
 
   def add_asm_group_id(%Email{} = email, nil), do: email
 
-  def add_asm_group_id(%Email{} = email, group_id) when is_integer(group_id) do
-    %{email | asm: %Sendgrid.Email.Asm{group_id: group_id}}
+  def add_asm_group_id(%Email{asm: asm} = email, group_id) when is_integer(group_id) do
+    %{email | asm: %{asm | group_id: group_id}}
   end
 
   def add_asm_groups_to_display(%Email{} = email, nil), do: email
 
-  def add_asm_groups_to_display(%Email{} = email, groups_to_display)
+  def add_asm_groups_to_display(%Email{asm: asm} = email, groups_to_display)
       when is_list(groups_to_display) do
-    %{email | asm: %Sendgrid.Email.Asm{groups_to_display: groups_to_display}}
+    %{email | asm: %{asm | groups_to_display: groups_to_display}}
   end
 
   @doc """
