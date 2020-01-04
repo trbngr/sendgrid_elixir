@@ -102,6 +102,7 @@ defmodule SendGrid.Email do
             attachments: nil,
             dynamic_template_data: nil,
             sandbox: false,
+            asm: nil,
             __phoenix_view__: nil,
             __phoenix_layout__: nil
 
@@ -122,6 +123,7 @@ defmodule SendGrid.Email do
           headers: nil | headers(),
           attachments: nil | [attachment],
           sandbox: boolean(),
+          asm: nil | %Sendgrid.Email.Asm{},
           __phoenix_view__: nil | atom,
           __phoenix_layout__:
             nil | %{optional(:text) => String.t(), optional(:html) => String.t()}
@@ -154,6 +156,15 @@ defmodule SendGrid.Email do
   @spec build :: t
   def build do
     %Email{}
+  end
+
+  def add_asm_group_id(%Email{} = email, group_id) when is_integer(group_id) do
+    %{email | asm: %Sendgrid.Email.Asm{group_id: group_id}}
+  end
+
+  def add_asm_groups_to_display(%Email{} = email, groups_to_display)
+      when is_list(groups_to_display) do
+    %{email | asm: %Sendgrid.Email.Asm{groups_to_display: groups_to_display}}
   end
 
   @doc """
