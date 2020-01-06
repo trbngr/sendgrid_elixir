@@ -2,8 +2,8 @@ defmodule SendGrid.Email.Asm do
   defstruct group_id: nil, groups_to_display: nil
 
   defimpl Jason.Encoder do
-    def encode(%{group_id: nil}, _opts) do
-      nil
+    def encode(%{group_id: nil}, opts) do
+      Jason.Encode.atom(nil, opts)
     end
 
     def encode(%{group_id: group_id, groups_to_display: groups_to_display}, opts) do
