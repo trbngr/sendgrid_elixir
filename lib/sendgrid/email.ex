@@ -103,6 +103,7 @@ defmodule SendGrid.Email do
             dynamic_template_data: nil,
             sandbox: false,
             asm: %SendGrid.Email.Asm{},
+            categories: nil,
             __phoenix_view__: nil,
             __phoenix_layout__: nil
 
@@ -124,6 +125,7 @@ defmodule SendGrid.Email do
           attachments: nil | [attachment],
           sandbox: boolean(),
           asm: nil | %SendGrid.Email.Asm{},
+          categories: nil | [String.t()],
           __phoenix_view__: nil | atom,
           __phoenix_layout__:
             nil | %{optional(:text) => String.t(), optional(:html) => String.t()}
@@ -169,6 +171,31 @@ defmodule SendGrid.Email do
   def add_asm_groups_to_display(%Email{asm: asm} = email, groups_to_display)
       when is_list(groups_to_display) do
     %{email | asm: %{asm | groups_to_display: groups_to_display}}
+  end
+
+  @doc """
+  Adds a category
+
+  Each category name may not exceed 255 characters. You cannot have more than 10 categories per request.
+  """
+  def add_category(%Email{} = email, nil), do: email
+  def add_category(%Email{} = email, ""), do: email
+
+  def add_category(%Email{}, category)
+      when is_binary(category) and byte_size(category) > 255 do
+    raise "A category name may not exceed 255 characters"
+  end
+
+  def add_category(%Email{categories: categories}, _category)
+      when length(categories) == 10 do
+    raise "You cannot have more than 10 categories per email"
+  end
+
+  def add_category(%Email{categories: categories} = email, category) when is_binary(category) do
+    case categories do
+      nil -> %Email{email | categories: [category]}
+      _ -> %Email{email | categories: [category | categories]}
+    end
   end
 
   @doc """
@@ -721,6 +748,7 @@ defmodule SendGrid.Email do
         attachments: email.attachments,
         headers: email.headers,
         asm: email.asm,
+        categories: email.categories,
         mail_settings: %{
           sandbox_mode: %{
             enable: Application.get_env(:sendgrid, :sandbox_enable, email.sandbox)
