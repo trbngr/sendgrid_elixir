@@ -178,6 +178,7 @@ defmodule SendGrid.Email do
 
   Each category name may not exceed 255 characters. You cannot have more than 10 categories per request.
   """
+  @spec add_category(t(), String.t()) :: t()
   def add_category(%Email{} = email, nil), do: email
   def add_category(%Email{} = email, ""), do: email
 
@@ -196,6 +197,21 @@ defmodule SendGrid.Email do
       nil -> %Email{email | categories: [category]}
       _ -> %Email{email | categories: [category | categories]}
     end
+  end
+
+  def add_category(%Email{} = email, category), do: add_category(email, to_string(category))
+
+  @doc """
+  Adds multiple categories to an email.
+
+  Each category name may not exceed 255 characters. You cannot have more than 10 categories per request.
+  """
+  @spec add_categories(t(), [String.t()]) :: t()
+  def add_categories(%Email{} = email, nil), do: email
+  def add_categories(%Email{} = email, []), do: email
+
+  def add_categories(%Email{} = email, categories) when is_list(categories) do
+    Enum.reduce(categories, email, &add_category/2)
   end
 
   @doc """
